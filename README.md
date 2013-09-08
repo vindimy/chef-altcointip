@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This repository contains the Chef cookbook and role for ALTcointip, a Reddit altcoin tip bot (https://github.com/vindimy/altcointip). The Chef role `altcointip` leverages Chef cookbook `altcointip` in order to set up a functional ALTcointip install, including basic configuration.
+This repository contains the Chef cookbook and role for **[ALTcointip](https://github.com/vindimy/altcointip)**, the Reddit altcoin tip bot. The Chef role `altcointip` leverages Chef cookbook `altcointip` to set up a functional ALTcointip installation, including basic configuration. However, the cookbook does *not* set up Bitcoin, Litecoin, or other altcoin daemons required for tipping functionality.
 
 ## Cookbook
 
