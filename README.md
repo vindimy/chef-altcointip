@@ -14,7 +14,12 @@ The `altcointip` cookbook does the following:
 * Clone `ALTcointip`, `pifkoin`, and `pyvircurex` repositories from Github to `/opt/altcointip` and create required symlinks
 * Set up basic config at `/opt/altcointip/altcointip/src/config.yml`
 
-For a list of configurable attributes the cookbook provides, see its README.
+The cookbook does *not*:
+
+* Install and configure Bitcoin, Litecoin, or any other altcoin
+* Manage the `config.yml` file, beyond initial install
+
+For a list of configurable attributes the cookbook provides, see its [README](cookbooks/altcointip/README.md).
 
 ## Role
 
