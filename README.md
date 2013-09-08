@@ -8,7 +8,7 @@ This repository contains the Chef cookbook and role for **[ALTcointip](https://g
 
 The `altcointip` cookbook does the following:
 
-* Install Python and `praw` python library
+* Install Python and required libraries
 * Install MySQL server and client and set up ALTcointip user, database, and tables
 * Install Apache httpd, php, and phpMyAdmin (available at `http://<host>/pma`)
 * Clone `ALTcointip`, `pifkoin`, and `pyvircurex` repositories from Github to `/opt/altcointip` and create required symlinks
