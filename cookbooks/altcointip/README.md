@@ -1,6 +1,6 @@
 altcointip Cookbook
 ===================
-This cookbook installs and configures Reddit ALTcointip bot.
+This cookbook installs and configures Reddit ALTcointip bot. This cookbook does *not* install any required altcoin daemons (such as Bitcoin, Litecoin, etc).
 
 Requirements
 ------------
