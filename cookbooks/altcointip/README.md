@@ -97,6 +97,8 @@ Just include `role[altcointip]` in your node's `run_list`:
 }
 ```
 
+To reinstall ALTcointip bot or restart a failed installation, delete the `#{node[:altcointip][:install_dir]}/altcointip` directory and run `chef-client`.
+
 License and Authors
 -------------------
 Authors:
