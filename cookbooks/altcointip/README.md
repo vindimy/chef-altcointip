@@ -1,23 +1,23 @@
 altcointip Cookbook
 ===================
-TODO: Enter the cookbook description here.
-
-e.g.
-This cookbook makes your favorite breakfast sandwhich.
+This cookbook installs and configures Reddit ALTcointip bot.
 
 Requirements
 ------------
-TODO: List your cookbook requirements. Be sure to include any requirements this cookbook has on platforms, libraries, other cookbooks, packages, operating systems, etc.
 
-e.g.
-#### packages
-- `toaster` - altcointip needs toaster to brown your bagel.
+#### Cookbooks
+
+  * apache2 (https://github.com/opscode-cookbooks/apache2)
+  * database (https://github.com/opscode-cookbooks/database)
+  * git (https://github.com/opscode-cookbooks/git)
+  * mysql (https://github.com/opscode-cookbooks/mysql)
+  * php (https://github.com/opscode-cookbooks/php)
+  * phpmyadmin (https://github.com/priestjim/chef-phpmyadmin)
+  * python (https://github.com/opscode-cookbooks/python)
 
 Attributes
 ----------
-TODO: List you cookbook attributes here.
 
-e.g.
 #### altcointip::default
 <table>
   <tr>
@@ -27,42 +27,78 @@ e.g.
     <th>Default</th>
   </tr>
   <tr>
-    <td><tt>['altcointip']['bacon']</tt></td>
-    <td>Boolean</td>
-    <td>whether to include bacon</td>
-    <td><tt>true</tt></td>
+    <td><tt>['user']</tt></td>
+    <td>String</td>
+    <td>Linux user with ownership of ALTcointip directory</td>
+    <td><tt>root</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['group']</tt></td>
+    <td>String</td>
+    <td>Linux group with ownership of ALTcointip directory</td>
+    <td><tt>root</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['install_dir']</tt></td>
+    <td>String</td>
+    <td>Target directory to install ALTcointip into</td>
+    <td><tt>/opt</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['mysql_db_name']</tt></td>
+    <td>String</td>
+    <td>Name of the MySQL database to be created for ALTcointip</td>
+    <td><tt>altcointip</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['mysql_username']</tt></td>
+    <td>String</td>
+    <td>Name of the MySQL user to be created for ALTcointip</td>
+    <td><tt>altcointip</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['mysql_password']</tt></td>
+    <td>String</td>
+    <td>MySQL user's password to be created for ALTcointip</td>
+    <td><tt>altcointip123</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['reddit_username']</tt></td>
+    <td>String</td>
+    <td>Reddit username to be used for Reddit access</td>
+    <td><tt>myaltcointip</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['reddit_password']</tt></td>
+    <td>String</td>
+    <td>Reddit password to be used for Reddit access</td>
+    <td><tt>myaltcointip123</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['www_root_dir']</tt></td>
+    <td>String</td>
+    <td>Root directory to point Apache httpd to. Symlink to phpMyAdmin will be created in it.</td>
+    <td><tt>/var/www/altcointip</tt></td>
   </tr>
 </table>
 
 Usage
 -----
 #### altcointip::default
-TODO: Write usage instructions for each cookbook.
 
-e.g.
-Just include `altcointip` in your node's `run_list`:
+Just include `role[altcointip]` in your node's `run_list`:
 
 ```json
 {
   "name":"my_node",
   "run_list": [
-    "recipe[altcointip]"
+    "role[altcointip]"
   ]
 }
 ```
 
-Contributing
-------------
-TODO: (optional) If this is a public cookbook, detail the process for contributing. If this is a private cookbook, remove this section.
-
-e.g.
-1. Fork the repository on Github
-2. Create a named feature branch (like `add_component_x`)
-3. Write you change
-4. Write tests for your change (if applicable)
-5. Run the tests, ensuring they all pass
-6. Submit a Pull Request using Github
-
 License and Authors
 -------------------
-Authors: TODO: List authors
+Authors:
+
+* vindimy (https://github.com/vindimy)
