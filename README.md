@@ -6,7 +6,7 @@ This repository contains the Chef cookbook and role for **[ALTcointip](https://g
 
 ## Cookbook
 
-The `altcointip` cookbook does the following:
+The `altcointip::default` recipe does the following:
 
 * Install Python and required libraries
 * Install MySQL server and client and set up ALTcointip user, database, and tables
@@ -14,13 +14,16 @@ The `altcointip` cookbook does the following:
 * Clone `ALTcointip`, `pifkoin`, and `pyvircurex` repositories from Github to `/opt/altcointip` and create required symlinks
 * Set up basic config at `/opt/altcointip/altcointip/src/config.yml`
 
-The cookbook does *not*:
+The `altcointip::coins` recipe does the following:
 
-* Install and configure Bitcoin, Litecoin, or any other altcoin
+* Install and configure Bitcoin, Litecoin, or any other altcoin defined by Chef attributes
+
+The `altcointip` cookbook does *not*:
+
 * Manage the `config.yml` file, beyond initial install
 
 For a list of configurable attributes the cookbook provides, see its [README](cookbooks/altcointip/README.md).
 
 ## Role
 
-The `altcointip` role sets some necessary attributes, such as MySQL bind address and phpMyAdmin version number, then includes the `altcointip` cookbook that does all the work. The role should be used to set `altcointip` cookbook's attributes as necessary. The role should be assigned to host's runlist.
+The `altcointip` role sets some necessary attributes, such as MySQL bind address and phpMyAdmin version number, then includes the `altcointip::default` recipe that does all the work. The role should be used to set `altcointip` cookbook's attributes as necessary. The role should be assigned to host's runlist.
