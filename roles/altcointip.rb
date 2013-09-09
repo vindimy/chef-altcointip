@@ -16,5 +16,6 @@ default_attributes(
 )
 
 run_list(
-  "recipe[altcointip]"
+  "recipe[altcointip::default]",
+  "recipe[altcointip::coins]"
 )
