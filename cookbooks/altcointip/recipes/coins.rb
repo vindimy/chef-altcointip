@@ -11,6 +11,7 @@ node[:altcointip][:coins].each do |coin|
 
   $altcointip_dir = "#{node[:altcointip][:install_dir]}/altcointip"
   $coin_dir = "#{$altcointip_dir}/coins/#{coin[:name]}-#{coin[:version]}"
+
   if coin[:enabled] && !File.directory?($coin_dir)
 
     directory $coin_dir do
@@ -43,31 +44,13 @@ node[:altcointip][:coins].each do |coin|
     to "#{$coin_dir}/#{coin[:daemon_path]}"
   end
 
-  ruby_block "get_user_home_dir" do
-    block do
-      cmd = Chef::ShellOut.new("echo ~" + node[:altcointip][:user]}).run_command
-      unless cmd.exitstatus == 0
-        Chef::Application.fatal!("Failed to execute get_user_home_dir")
-      end
-      node[:altcointip][:user_home_dir] = cmd.stdout
-    end
-  end
-
-  directory "#{node[:altcointip][:user_home_dir]}/.#{coin[:name]}" do
-    action :create
-    recursive false
-    user node[:altcointip][:user]
-    group node[:altcointip][:group]
-    mode "0755"
-  end
-
-  template "#{node[:altcointip][:user_home_dir]}/.#{coin[:name]}/#{coin[:name]}.conf" do
+  template "#{$coin_dir}/#{coin[:name]}.conf" do
     action :create
     backup false
     source "coin.conf.erb"
     variables(
-      "rpcuser" => "#{coin[:name]}rpc"
-      "rpcpassword" => coin[:rpcpassword]
+      "rpcuser" => "#{coin[:name]}rpc",
+      "rpcpassword" => coin[:rpcpassword],
       "rpcport" => coin[:rpcport]
     )
     user node[:altcointip][:user]

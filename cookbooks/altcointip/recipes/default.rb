@@ -65,7 +65,7 @@ unless File.directory?($altcointip_dir)
     recursive true
     user node[:altcointip][:user]
     group node[:altcointip][:group]
-    mode "0750"
+    mode "0755"
   end
 
   # Clone Git repositories
@@ -119,7 +119,7 @@ unless File.directory?($altcointip_dir)
     password node[:altcointip][:mysql_password]
     database_name node[:altcointip][:mysql_db_name]
     host '%'
-    privileges [:select,:update,:insert]
+    privileges [:select,:update,:insert,:delete]
     action :grant
   end
 

@@ -1,5 +1,5 @@
-node[:altcointip][:coins] = {
-  "bitcoin" => {
+default[:altcointip][:coins] = [
+  {
     :enabled => true,
     :name => "bitcoin",
     :version => "0.8.4",
@@ -11,7 +11,7 @@ node[:altcointip][:coins] = {
     :rpcpassword => "bitcoin123",
     :rpcport => "8332"
   },
-  "litecoin" => {
+  {
     :enabled => true,
     :name => "litecoin",
     :version => "0.8.4.1",
@@ -23,7 +23,7 @@ node[:altcointip][:coins] = {
     :rpcpassword => "litecoin123",
     :rpcport => "9332"
   },
-  "ppcoin" => {
+  {
     :enabled => true,
     :name => "ppcoin",
     :version => "0.3.0",
@@ -35,7 +35,7 @@ node[:altcointip][:coins] = {
     :rpcpassword => "ppcoin123",
     :rpcport => "9902"
   },
-  "namecoin" => {
+  {
     :enabled => true,
     :name => "namecoin",
     :version => "0.3.50",
@@ -47,7 +47,7 @@ node[:altcointip][:coins] = {
     :rpcpassword => "namecoin123",
     :rpcport => "8336"
   },
-  "primecoin" => {
+  {
     :enabled => true,
     :name => "primecoin",
     :version => "0.1.1",
@@ -60,4 +60,3 @@ node[:altcointip][:coins] = {
     :rpcport => "8772"
   }
 ]
-
