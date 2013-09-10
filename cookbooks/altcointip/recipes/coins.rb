@@ -9,7 +9,7 @@
 
 node[:altcointip][:coins].each do |coin|
 
-  $altcointip_dir = "#{node[:altcointip][:install_dir]}/altcointip"
+  $altcointip_dir = node[:altcointip][:install_dir]}
   $coin_dir = "#{$altcointip_dir}/coins/#{coin[:name]}-#{coin[:version]}"
 
   if coin[:enabled] && !File.directory?($coin_dir)
@@ -56,6 +56,18 @@ node[:altcointip][:coins].each do |coin|
     user node[:altcointip][:user]
     group node[:altcointip][:group]
     mode "0640"
+  end
+
+  directory "#{node[:altcointip][:user_home_dir]}/.#{coin[:name]}" do
+    action :create
+    recursive false
+    user node[:altcointip][:user]
+    group node[:altcointip][:group]
+    mode "0755"
+  end
+
+  link "#{node[:altcointip][:user_home_dir]}/.#{coin[:name]}/#{coin[:name]}.conf" do
+    to "#{$coin_dir}/#{coin[:name]}.conf"
   end
 
 end

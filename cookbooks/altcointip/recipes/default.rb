@@ -25,39 +25,11 @@ node[:altcointip][:python_pips].each do |pip|
 end
 
 
-# Install Apache and phpmyadmin
-
-include_recipe "php"
-include_recipe "php::module_mysql"
-include_recipe "apache2"
-include_recipe "apache2::mod_ssl"
-include_recipe "apache2::mod_php5"
-include_recipe "phpmyadmin"
-
-directory node[:altcointip][:www_root_dir] do
-  action :create
-  recursive true
-  user node[:altcointip][:user]
-  group node[:altcointip][:group]
-  mode "0755"
-end  
-
-web_app "altcointip" do
-  server_name node['hostname']
-  server_aliases [node['fqdn']]
-  docroot node[:altcointip][:www_root_dir]
-end
-
-link "#{node[:altcointip][:www_root_dir]}/pma" do
-  to "/opt/phpmyadmin"
-end
-
-
 # Set up altcointip and MySQL
 
 include_recipe "git"
 
-$altcointip_dir = "#{node[:altcointip][:install_dir]}/altcointip"
+$altcointip_dir = node[:altcointip][:install_dir]
 unless File.directory?($altcointip_dir)
 
   directory $altcointip_dir do
@@ -91,7 +63,7 @@ unless File.directory?($altcointip_dir)
 
   # Set up MySQL
 
-  mysql_connection_info = {:host => "localhost", :username => 'root', :password => node['mysql']['server_root_password']}
+  mysql_connection_info = {:host => 'localhost', :username => 'root', :password => node[:mysql][:server_root_password]}
 
   # Create database
   mysql_database node[:altcointip][:mysql_db_name] do
@@ -119,14 +91,15 @@ unless File.directory?($altcointip_dir)
     password node[:altcointip][:mysql_password]
     database_name node[:altcointip][:mysql_db_name]
     host '%'
-    privileges [:select,:update,:insert,:delete]
+    privileges [:all]
     action :grant
   end
 
-  # Set up config.yml
+  # Set up config.yml if it doesn't exist
   script "set_up_config" do
     action :run
     interpreter "bash"
+    not_if File.file?("#{$altcointip_dir}/altcointip/src/config.yml")
     cwd $altcointip_dir
     code <<-EOH
     cp #{$altcointip_dir}/altcointip/src/sample-config.yml #{$altcointip_dir}/altcointip/src/config.yml
@@ -138,4 +111,37 @@ unless File.directory?($altcointip_dir)
     EOH
   end
 
+end
+
+cron "update_stats" do
+  action node[:altcointip][:cron][:stats][:enabled] ? :create : :delete
+  user node[:altcointip][:user]
+  minute node[:altcointip][:cron][:stats][:minute]
+  hour node[:altcointip][:cron][:stats][:hour]
+  day node[:altcointip][:cron][:stats][:day]
+  month node[:altcointip][:cron][:stats][:month]
+  weekday node[:altcointip][:cron][:stats][:weekday]
+  command "cd #{$altcointip_dir}/altcointip/src && python _update_stats.rb >/dev/null 2>&1"
+end
+
+cron "backup_db" do
+  action node[:altcointip][:cron][:backup_db][:enabled] ? :create : :delete
+  user node[:altcointip][:user]
+  minute node[:altcointip][:cron][:backup_db][:minute]
+  hour node[:altcointip][:cron][:backup_db][:hour]
+  day node[:altcointip][:cron][:backup_db][:day]
+  month node[:altcointip][:cron][:backup_db][:month]
+  weekday node[:altcointip][:cron][:backup_db][:weekday]
+  command "cd #{$altcointip_dir}/altcointip/src && python _backup_db.rb #{node[:altcointip][:cron][:backup_db][:local_dir]} #{node[:altcointip][:cron][:backup_db][:remote_dir]} >/dev/null 2>&1"
+end
+
+cron "backup_wallets" do
+  action node[:altcointip][:cron][:backup_wallets][:enabled] ? :create : :delete
+  user node[:altcointip][:user]
+  minute node[:altcointip][:cron][:backup_wallets][:minute]
+  hour node[:altcointip][:cron][:backup_wallets][:hour]
+  day node[:altcointip][:cron][:backup_wallets][:day]
+  month node[:altcointip][:cron][:backup_wallets][:month]
+  weekday node[:altcointip][:cron][:backup_wallets][:weekday]
+  command "cd #{$altcointip_dir}/altcointip/src && python _backup_wallets.rb #{node[:altcointip][:cron][:backup_wallets][:local_dir]} #{node[:altcointip][:cron][:backup_wallets][:remote_dir]} >/dev/null 2>&1"
 end

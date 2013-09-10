@@ -1,4 +1,9 @@
+# Python information
+
 default[:altcointip][:python_pips] = ["praw", "sqlalchemy", "mysql-python", "pyyaml"]
+
+
+# Git information
 
 default[:altcointip][:git_repo_addr] = {
   "altcointip" => "https://github.com/vindimy/altcointip.git",
@@ -6,11 +11,13 @@ default[:altcointip][:git_repo_addr] = {
   "pyvircurex" => "https://github.com/christopherpoole/pyvircurex.git"
 }
 
+
 # Linux information
 
-default[:altcointip][:user] = "root"
-default[:altcointip][:group] = "root"
-default[:altcointip][:install_dir] = "/opt"
+default[:altcointip][:user] = "altcointip"
+default[:altcointip][:user_home_dir] = "/opt/altcointip"
+default[:altcointip][:group] = "altcointip"
+default[:altcointip][:install_dir] = "/opt/altcointip"
 
 
 # MySQL information
@@ -26,6 +33,35 @@ default[:altcointip][:reddit_username] = "myaltcointip"
 default[:altcointip][:reddit_password] = "myaltcointip123"
 
 
-# httpd information
+# cron information
 
-default[:altcointip][:www_root_dir] = "/var/www/altcointip"
+default[:altcointip][:cron] = {
+  "stats" => {
+    "enabled" => false,
+    "minute" => "0",
+    "hour" => "*/3",
+    "day" => "*",
+    "month" => "*",
+    "weekday" => "*"
+  },
+  "backup_db" => {
+    "enabled" => false,
+    "minute" => "0",
+    "hour" => "8,20",
+    "day" => "*",
+    "month" => "*",
+    "weekday" => "*",
+    "local_dir" => "~/backups",
+    "remote_dir" => ""
+  },
+  "backup_wallets" => {
+    "enabled" => false,
+    "minute" => "0",
+    "hour" => "9,21",
+    "day" => "*",
+    "month" => "*",
+    "weekday" => "*",
+    "local_dir" => "~/backups",
+    "remote_dir" => ""
+  }
+}

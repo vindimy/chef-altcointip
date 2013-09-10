@@ -1,6 +1,6 @@
-default[:altcointip][:coins] = [
-  {
-    :enabled => true,
+default[:altcointip][:coins] = {
+  "bitcoin" => {
+    :enabled => false,
     :name => "bitcoin",
     :version => "0.8.4",
     :file_name => "bitcoin-0.8.4-linux.tar.gz",
@@ -11,8 +11,8 @@ default[:altcointip][:coins] = [
     :rpcpassword => "bitcoin123",
     :rpcport => "8332"
   },
-  {
-    :enabled => true,
+  "litecoin" => {
+    :enabled => false,
     :name => "litecoin",
     :version => "0.8.4.1",
     :file_name => "litecoin-0.8.4.1-linux.tar.xz",
@@ -23,8 +23,8 @@ default[:altcointip][:coins] = [
     :rpcpassword => "litecoin123",
     :rpcport => "9332"
   },
-  {
-    :enabled => true,
+  "ppcoin" => {
+    :enabled => false,
     :name => "ppcoin",
     :version => "0.3.0",
     :file_name => "ppcoin-0.3.0-linux.tar.gz",
@@ -35,8 +35,8 @@ default[:altcointip][:coins] = [
     :rpcpassword => "ppcoin123",
     :rpcport => "9902"
   },
-  {
-    :enabled => true,
+  "namecoin" => {
+    :enabled => false,
     :name => "namecoin",
     :version => "0.3.50",
     :file_name => "namecoin_linux64.tgz",
@@ -47,8 +47,8 @@ default[:altcointip][:coins] = [
     :rpcpassword => "namecoin123",
     :rpcport => "8336"
   },
-  {
-    :enabled => true,
+  "primecoin" => {
+    :enabled => false,
     :name => "primecoin",
     :version => "0.1.1",
     :file_name => "primecoin-0.1.1-linux.tar.gz",
@@ -59,4 +59,4 @@ default[:altcointip][:coins] = [
     :rpcpassword => "primecoin123",
     :rpcport => "8772"
   }
-]
+}

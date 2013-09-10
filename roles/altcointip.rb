@@ -8,13 +8,28 @@ default_attributes(
       "wait_timeout" => "3600"
     }
   },
-  "phpmyadmin" => {
-    "version" => "4.0.6",
-    "checksum" => "b7adf5c7a4366168fa1d921ab9920f33c604a5c3d1039a91785892457f00f47f",
-    "fpm" => false
+  "altcointip" => {
+    "cron" => {
+      "stats" => {
+        "enabled" => false
+      },
+      "backup_db" => {
+        "enabled" => false
+      },
+      "backup_wallets" => {
+        "enabled" => false
+      }
+    },
+    "coins" => {
+      "bitcoin" => {
+        "enabled" => true
+      }
+    }
   }
 )
 
 run_list(
-  "recipe[altcointip]"
+  "recipe[altcointip::default]",
+  "recipe[altcointip::coins]",
+  "recipe[altcointip::phpmyadmin]"
 )
