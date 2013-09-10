@@ -7,9 +7,9 @@
 # All rights reserved - Do Not Redistribute
 #
 
-node[:altcointip][:coins].each do |coin|
+node[:altcointip][:coins].each do |key, coin|
 
-  $altcointip_dir = node[:altcointip][:install_dir]}
+  $altcointip_dir = node[:altcointip][:install_dir]
   $coin_dir = "#{$altcointip_dir}/coins/#{coin[:name]}-#{coin[:version]}"
 
   if coin[:enabled] && !File.directory?($coin_dir)
@@ -18,7 +18,7 @@ node[:altcointip][:coins].each do |coin|
       action :create
       recursive true
       user node[:altcointip][:user]
-      group node[:altcointip][:group]
+      group node[:altcointip][:user_group]
       mode "0755"
     end
 
@@ -27,12 +27,14 @@ node[:altcointip][:coins].each do |coin|
       source coin[:file_source_url]
       checksum coin[:file_sha256sum]
       backup false
+      owner node[:altcointip][:user]
     end
 
     script "extract_coin" do
       action :run
       interpreter "bash"
       cwd $coin_dir
+      user node[:altcointip][:user]
       code <<-EOH
       #{coin[:file_extract_cmd]} #{coin[:file_name]}
       EOH
@@ -42,6 +44,7 @@ node[:altcointip][:coins].each do |coin|
 
   link "/usr/bin/#{coin[:name]}d" do
     to "#{$coin_dir}/#{coin[:daemon_path]}"
+    owner node[:altcointip][:user]
   end
 
   template "#{$coin_dir}/#{coin[:name]}.conf" do
@@ -54,7 +57,7 @@ node[:altcointip][:coins].each do |coin|
       "rpcport" => coin[:rpcport]
     )
     user node[:altcointip][:user]
-    group node[:altcointip][:group]
+    group node[:altcointip][:user_group]
     mode "0640"
   end
 
@@ -62,12 +65,13 @@ node[:altcointip][:coins].each do |coin|
     action :create
     recursive false
     user node[:altcointip][:user]
-    group node[:altcointip][:group]
+    group node[:altcointip][:user_group]
     mode "0755"
   end
 
   link "#{node[:altcointip][:user_home_dir]}/.#{coin[:name]}/#{coin[:name]}.conf" do
     to "#{$coin_dir}/#{coin[:name]}.conf"
+    owner node[:altcointip][:user]
   end
 
 end

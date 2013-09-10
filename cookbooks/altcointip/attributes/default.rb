@@ -15,8 +15,12 @@ default[:altcointip][:git_repo_addr] = {
 # Linux information
 
 default[:altcointip][:user] = "altcointip"
+# To specify password, use the following command to get encrypted value:
+# openssl passwd -1 "mypassword"
+default[:altcointip][:user_password] = "$1$5AtcQt.F$a3SJhl/KHt1sfoJhndGza0"
+default[:altcointip][:user_group] = "altcointip"
 default[:altcointip][:user_home_dir] = "/opt/altcointip"
-default[:altcointip][:group] = "altcointip"
+
 default[:altcointip][:install_dir] = "/opt/altcointip"
 
 

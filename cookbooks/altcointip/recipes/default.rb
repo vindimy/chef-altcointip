@@ -25,6 +25,25 @@ node[:altcointip][:python_pips].each do |pip|
 end
 
 
+# Create altcointip Linux user and group
+
+user node[:altcointip][:user] do
+  action :create
+  home node[:altcointip][:user_home_dir]
+  gid node[:altcointip][:user_group]
+  shell "/bin/bash"
+  system false
+  password node[:altcointip][:user_password]
+  supports :manage_home => false
+end
+
+group node[:altcointip][:user_group] do
+  action :create
+  append :true
+  members node[:altcointip][:user]
+end
+
+
 # Set up altcointip and MySQL
 
 include_recipe "git"
@@ -36,7 +55,7 @@ unless File.directory?($altcointip_dir)
     action :create
     recursive true
     user node[:altcointip][:user]
-    group node[:altcointip][:group]
+    group node[:altcointip][:user_group]
     mode "0755"
   end
 
@@ -46,6 +65,7 @@ unless File.directory?($altcointip_dir)
     action :run
     interpreter "bash"
     cwd $altcointip_dir
+    user node[:altcointip][:user]
     code <<-EOH
     git clone #{node[:altcointip][:git_repo_addr][:altcointip]} #{$altcointip_dir}/altcointip || exit 1
     git clone #{node[:altcointip][:git_repo_addr][:pifkoin]} #{$altcointip_dir}/pifkoin || exit 1
@@ -55,10 +75,12 @@ unless File.directory?($altcointip_dir)
 
   link "#{$altcointip_dir}/altcointip/src/pifkoin" do
     to "#{$altcointip_dir}/pifkoin/python"
+    owner node[:altcointip][:user]
   end
 
   link "#{$altcointip_dir}/altcointip/src/ctb/pyvircurex" do
     to "#{$altcointip_dir}/pyvircurex/vircurex"
+    owner node[:altcointip][:user]
   end
 
   # Set up MySQL
@@ -101,6 +123,7 @@ unless File.directory?($altcointip_dir)
     interpreter "bash"
     not_if File.file?("#{$altcointip_dir}/altcointip/src/config.yml")
     cwd $altcointip_dir
+    user node[:altcointip][:user]
     code <<-EOH
     cp #{$altcointip_dir}/altcointip/src/sample-config.yml #{$altcointip_dir}/altcointip/src/config.yml
     sed -i 's/mysqldb/#{node[:altcointip][:mysql_db_name]}/g' #{$altcointip_dir}/altcointip/src/config.yml || exit 1
@@ -113,6 +136,9 @@ unless File.directory?($altcointip_dir)
 
 end
 
+
+# Create crontab entries, if configured
+
 cron "update_stats" do
   action node[:altcointip][:cron][:stats][:enabled] ? :create : :delete
   user node[:altcointip][:user]
@@ -121,6 +147,7 @@ cron "update_stats" do
   day node[:altcointip][:cron][:stats][:day]
   month node[:altcointip][:cron][:stats][:month]
   weekday node[:altcointip][:cron][:stats][:weekday]
+  user node[:altcointip][:user]
   command "cd #{$altcointip_dir}/altcointip/src && python _update_stats.rb >/dev/null 2>&1"
 end
 
@@ -132,6 +159,7 @@ cron "backup_db" do
   day node[:altcointip][:cron][:backup_db][:day]
   month node[:altcointip][:cron][:backup_db][:month]
   weekday node[:altcointip][:cron][:backup_db][:weekday]
+  user node[:altcointip][:user]
   command "cd #{$altcointip_dir}/altcointip/src && python _backup_db.rb #{node[:altcointip][:cron][:backup_db][:local_dir]} #{node[:altcointip][:cron][:backup_db][:remote_dir]} >/dev/null 2>&1"
 end
 
@@ -143,5 +171,6 @@ cron "backup_wallets" do
   day node[:altcointip][:cron][:backup_wallets][:day]
   month node[:altcointip][:cron][:backup_wallets][:month]
   weekday node[:altcointip][:cron][:backup_wallets][:weekday]
+  user node[:altcointip][:user]
   command "cd #{$altcointip_dir}/altcointip/src && python _backup_wallets.rb #{node[:altcointip][:cron][:backup_wallets][:local_dir]} #{node[:altcointip][:cron][:backup_wallets][:remote_dir]} >/dev/null 2>&1"
 end
