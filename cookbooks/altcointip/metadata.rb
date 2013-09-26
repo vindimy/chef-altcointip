@@ -7,6 +7,7 @@ version          '0.1.0'
 
 depends "apache2"
 depends "database"
+depends "crypto-coin"
 depends "git"
 depends "mysql"
 depends "php"

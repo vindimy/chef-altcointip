@@ -25,6 +25,13 @@ node[:altcointip][:python_pips].each do |pip|
 end
 
 
+# Install Cryptocoins
+
+node[:altcointip][:cryptocoins].each do |coin|
+  include_recipe "#{coin[:name]}"
+end
+
+
 # Create altcointip Linux user and group
 
 user node[:altcointip][:user] do
@@ -67,9 +74,9 @@ unless File.directory?($altcointip_dir)
     cwd $altcointip_dir
     user node[:altcointip][:user]
     code <<-EOH
-    git clone #{node[:altcointip][:git_repo_addr][:altcointip]} #{$altcointip_dir}/altcointip || exit 1
-    git clone #{node[:altcointip][:git_repo_addr][:pifkoin]} #{$altcointip_dir}/pifkoin || exit 1
-    git clone #{node[:altcointip][:git_repo_addr][:pyvircurex]} #{$altcointip_dir}/pyvircurex || exit 1
+    git clone #{node[:altcointip][:git_repos][:altcointip]} #{$altcointip_dir}/altcointip || exit 1
+    git clone #{node[:altcointip][:git_repos][:pifkoin]} #{$altcointip_dir}/pifkoin || exit 1
+    git clone #{node[:altcointip][:git_repos][:pyvircurex]} #{$altcointip_dir}/pyvircurex || exit 1
     EOH
   end
 
