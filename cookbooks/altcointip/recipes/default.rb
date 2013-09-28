@@ -79,6 +79,17 @@ node[:altcointip][:cryptocoins].each do |key,coin|
 
 end
 
+template '/etc/profile.d/coin_alias.sh' do
+  source 'coin_alias.sh.erb'
+  backup false
+  user 'root'
+  group 'root'
+  mode '0755'
+  variables({
+    :coins => node[:altcointip][:cryptocoins]
+  })
+end
+
 
 # Set up altcointip
 

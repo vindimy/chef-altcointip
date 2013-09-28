@@ -1,0 +1,10 @@
+<%
+@coins.each do |key, coin|
+  if coin[:enabled]
+    coindir = File.join(node[:altcointip][:install_dir], 'coins', coin[:name])
+%>
+alias <%= coin[:name] %>d='<%= coindir %>/<%= coin[:name] %>d -datadir=<%= coindir %>/data -conf=<%= coindir %>/<%= coin[:name] %>.conf'
+<%
+  end
+end
+%>
