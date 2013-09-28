@@ -25,14 +25,12 @@ node[:altcointip][:python_pips].each do |pip|
 end
 
 
-# Install Cryptocoins
-
-node[:altcointip][:cryptocoins].each do |coin|
-  include_recipe "#{coin[:name]}"
-end
-
-
 # Create altcointip Linux user and group
+
+group node[:altcointip][:user_group] do
+  action :create
+  append true
+end
 
 user node[:altcointip][:user] do
   action :create
@@ -44,10 +42,42 @@ user node[:altcointip][:user] do
   supports :manage_home => false
 end
 
-group node[:altcointip][:user_group] do
+
+# Install cryptocoins
+
+directory ::File.join(node[:altcointip][:install_dir], 'coins') do
   action :create
-  append :true
-  members node[:altcointip][:user]
+  mode '0755'
+  user node[:altcointip][:user]
+  group node[:altcointip][:group]
+  recursive true
+end
+
+::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
+include_recipe "crypto-coin::default"
+
+node[:altcointip][:cryptocoins].each do |key,coin|
+
+  if coin[:enabled]
+
+    node.set_unless[:altcointip][:cryptocoins]["#{coin[:name]}"][:rpcpassword] = secure_password
+
+    crypto_coin coin[:name] do
+      repository    coin[:git_repo]
+      revision      coin[:revision]
+      port          coin[:rpcport]
+      rpcpassword   node[:altcointip][:cryptocoins]["#{coin[:name]}"][:rpcpassword]
+      group         node[:altcointip][:user_group]
+      home          ::File.join(node[:altcointip][:install_dir], 'coins', coin[:name])
+    end
+
+    service coin[:name] do
+      provider Chef::Provider::Service::Upstart
+      action coin[:autostart] ? :start : :nothing
+    end
+
+  end
+
 end
 
 
@@ -144,40 +174,20 @@ unless File.directory?($altcointip_dir)
 end
 
 
-# Create crontab entries, if configured
+# Manage crontab entries
 
-cron "update_stats" do
-  action node[:altcointip][:cron][:stats][:enabled] ? :create : :delete
-  user node[:altcointip][:user]
-  minute node[:altcointip][:cron][:stats][:minute]
-  hour node[:altcointip][:cron][:stats][:hour]
-  day node[:altcointip][:cron][:stats][:day]
-  month node[:altcointip][:cron][:stats][:month]
-  weekday node[:altcointip][:cron][:stats][:weekday]
-  user node[:altcointip][:user]
-  command "cd #{$altcointip_dir}/altcointip/src && python _update_stats.rb >/dev/null 2>&1"
-end
+node[:altcointip][:cron].each do |key, job|
 
-cron "backup_db" do
-  action node[:altcointip][:cron][:backup_db][:enabled] ? :create : :delete
-  user node[:altcointip][:user]
-  minute node[:altcointip][:cron][:backup_db][:minute]
-  hour node[:altcointip][:cron][:backup_db][:hour]
-  day node[:altcointip][:cron][:backup_db][:day]
-  month node[:altcointip][:cron][:backup_db][:month]
-  weekday node[:altcointip][:cron][:backup_db][:weekday]
-  user node[:altcointip][:user]
-  command "cd #{$altcointip_dir}/altcointip/src && python _backup_db.rb #{node[:altcointip][:cron][:backup_db][:local_dir]} #{node[:altcointip][:cron][:backup_db][:remote_dir]} >/dev/null 2>&1"
-end
+  cron key do
+    action job[:enabled] ? :create : :delete
+    user node[:altcointip][:user]
+    minute job[:minute]
+    hour job[:hour]
+    day job[:day]
+    month job[:month]
+    weekday job[:weekday]
+    user node[:altcointip][:user]
+    command job[:command]
+  end
 
-cron "backup_wallets" do
-  action node[:altcointip][:cron][:backup_wallets][:enabled] ? :create : :delete
-  user node[:altcointip][:user]
-  minute node[:altcointip][:cron][:backup_wallets][:minute]
-  hour node[:altcointip][:cron][:backup_wallets][:hour]
-  day node[:altcointip][:cron][:backup_wallets][:day]
-  month node[:altcointip][:cron][:backup_wallets][:month]
-  weekday node[:altcointip][:cron][:backup_wallets][:weekday]
-  user node[:altcointip][:user]
-  command "cd #{$altcointip_dir}/altcointip/src && python _backup_wallets.rb #{node[:altcointip][:cron][:backup_wallets][:local_dir]} #{node[:altcointip][:cron][:backup_wallets][:remote_dir]} >/dev/null 2>&1"
 end
