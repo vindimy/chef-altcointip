@@ -19,7 +19,7 @@ include_recipe "database::mysql"
 include_recipe "git"
 
 $altcointip_dir = node[:altcointip][:install_dir]
-unless File.directory?($altcointip_dir)
+unless File.directory?($altcointip_dir) and File.file?(File.join($altcointip_dir, 'mysql_db_created'))
 
   directory $altcointip_dir do
     action :create
@@ -31,14 +31,16 @@ unless File.directory?($altcointip_dir)
 
   # Clone Git repository
 
-  script "git_clone" do
-    action :run
-    interpreter "bash"
-    cwd $altcointip_dir
-    user node[:altcointip][:user]
-    code <<-EOH
-    git clone #{node[:altcointip][:git_repos][:altcointip]} #{$altcointip_dir}/altcointip || exit 1
-    EOH
+  unless File.file?(File.join($altcointip_dir, 'altcointip/altcointip.sql'))
+    script "git_clone" do
+      action :run
+      interpreter "bash"
+      cwd $altcointip_dir
+      user node[:altcointip][:user]
+      code <<-EOH
+      git clone #{node[:altcointip][:git_repos][:altcointip]} #{$altcointip_dir}/altcointip || exit 1
+      EOH
+    end
   end
 
   # Set up database
@@ -73,6 +75,10 @@ unless File.directory?($altcointip_dir)
     host '%'
     privileges [:all]
     action :grant
+  end
+
+  file ::File.join($altcointip_dir, 'mysql_db_created') do
+    action :create
   end
 
 end

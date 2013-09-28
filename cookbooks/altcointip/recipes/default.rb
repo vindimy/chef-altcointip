@@ -38,7 +38,7 @@ end
 
 # Install cryptocoins
 
-directory ::File.join(node[:altcointip][:install_dir], 'coins') do
+directory File.join(node[:altcointip][:install_dir], 'coins') do
   action :create
   mode '0755'
   user node[:altcointip][:user]
@@ -67,7 +67,7 @@ node[:altcointip][:cryptocoins].each do |key,coin|
       port          coin[:rpcport]
       rpcpassword   node[:altcointip][:cryptocoins]["#{coin[:name]}"][:rpcpassword]
       group         node[:altcointip][:user_group]
-      home          ::File.join(node[:altcointip][:install_dir], 'coins', coin[:name])
+      home          File.join(node[:altcointip][:install_dir], 'coins', coin[:name])
     end
 
     service coin[:name] do
@@ -128,6 +128,7 @@ unless File.directory?("#{$altcointip_dir}/altcointip")
     user node[:altcointip][:user]
     code <<-EOH
     cp #{$altcointip_dir}/altcointip/src/sample-config.yml #{$altcointip_dir}/altcointip/src/config.yml
+    chmod 640 #{$altcointip_dir}/altcointip/src/config.yml
     sed -i 's mysqldb #{node[:altcointip][:mysql_db_name]} g' #{$altcointip_dir}/altcointip/src/config.yml
     sed -i 's mysqluser #{node[:altcointip][:mysql_username]} g' #{$altcointip_dir}/altcointip/src/config.yml
     sed -i 's mysqlpass #{node[:altcointip][:mysql_password]} g' #{$altcointip_dir}/altcointip/src/config.yml
