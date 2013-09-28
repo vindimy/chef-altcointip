@@ -1,6 +1,6 @@
 altcointip Cookbook
 ===================
-This cookbook installs and configures Reddit ALTcointip bot. This cookbook does *not* install any required altcoin daemons (such as Bitcoin, Litecoin, etc).
+This cookbook installs and configures Reddit ALTcointip bot and its dependencies - such as MySQL (with optional phpMyAdmin), and cryptocoins (Bitcoin, Litecoin, etc).
 
 Requirements
 ------------
@@ -20,6 +20,7 @@ Attributes
 ----------
 
 #### altcointip::default
+
 <table>
   <tr>
     <th>Key</th>
@@ -91,9 +92,8 @@ Attributes
 
 Usage
 -----
-#### altcointip::default
 
-Just include `role[altcointip]` in your node's `run_list`:
+Just include the provided role - `role[altcointip]` - in your node's `run_list`. The role specifies some of the attributes you should manage and calls the `altcointip` cookbook.
 
 ```json
 {
