@@ -63,6 +63,7 @@ default[:altcointip][:cryptocoins] = {
     :autostart => false,
     :method => 'git',
     :git_repo => 'https://github.com/namecoin/namecoin.git',
+    :extra_packages => ['libglibmm-2.4-dev'],
     :revision => 'nc0.3.51.00',
     :file_name => 'namecoin_linux64.tgz',
     :file_source_url => 'http://dot-bit.org/files/namecoin_linux64.tgz',

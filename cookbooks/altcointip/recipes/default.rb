@@ -62,6 +62,12 @@ node[:altcointip][:cryptocoins].each do |key,coin|
 
     node.set_unless[:altcointip][:cryptocoins]["#{coin[:name]}"][:rpcpassword] = secure_password
 
+    if coin[:extra_packages]
+      coin[:extra_packages].each do |pkg|
+        package pkg
+      end
+    end
+
     crypto_coin coin[:name] do
       repository    coin[:git_repo]
       revision      coin[:revision]
