@@ -1,35 +1,55 @@
-name "altcointip"
-description "Role to set up altcointip, Reddit altcoin tip bot"
+name 'altcointip'
+description 'Role to set up altcointip, Reddit altcoin tip bot'
 
 default_attributes(
-  "mysql" => {
-    "bind_address" => "127.0.0.1",
-    "tunable" => {
-      "wait_timeout" => "3600"
+  :mysql => {
+    :bind_address => '127.0.0.1',
+    :tunable => {
+      :wait_timeout => 3600
     }
   },
-  "altcointip" => {
-    "cron" => {
-      "stats" => {
-        "enabled" => false
+  :phpmyadmin => {
+    :fpm => false
+  },
+  :altcointip => {
+    # Use this section to control cryptocoin installation
+    # as well as add cryptocoins not defined in the cookbook
+    :cryptocoins => {
+      :bitcoin => {
+        :enabled => true
       },
-      "backup_db" => {
-        "enabled" => false
+      :litecoin => {
+        :enabled => true
       },
-      "backup_wallets" => {
-        "enabled" => false
+      :namecoin => {
+        :enabled => true
+      },
+      :ppcoin => {
+        :enabled => true
+      },
+      :primecoin => {
+        :enabled => true
       }
     },
-    "coins" => {
-      "bitcoin" => {
-        "enabled" => true
+    # Use this section to control cron jobs
+    :cron => {
+      :stats => {
+        :enabled => false
+      },
+      :backup_config => {
+        :enabled => true
+      },
+      :backup_db => {
+        :enabled => true
+      },
+      :backup_wallets => {
+        :enabled => true
       }
     }
   }
 )
 
 run_list(
-  "recipe[altcointip::default]",
-  "recipe[altcointip::coins]",
-  "recipe[altcointip::phpmyadmin]"
+  'recipe[altcointip::default]',
+  'recipe[altcointip::phpmyadmin]'
 )
