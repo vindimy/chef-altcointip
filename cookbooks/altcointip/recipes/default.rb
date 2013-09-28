@@ -7,13 +7,6 @@
 # All rights reserved - Do Not Redistribute
 #
 
-# Install MySQL
-
-include_recipe "mysql::server"
-include_recipe "mysql::client"
-include_recipe "database::mysql"
-
-
 # Install Python
 
 include_recipe "python"
@@ -87,12 +80,12 @@ node[:altcointip][:cryptocoins].each do |key,coin|
 end
 
 
-# Set up altcointip and MySQL
+# Set up altcointip
 
 include_recipe "git"
 
 $altcointip_dir = node[:altcointip][:install_dir]
-unless File.directory?($altcointip_dir)
+unless File.directory?("#{$altcointip_dir}/altcointip")
 
   directory $altcointip_dir do
     action :create
@@ -126,40 +119,6 @@ unless File.directory?($altcointip_dir)
     owner node[:altcointip][:user]
   end
 
-  # Set up MySQL
-
-  mysql_connection_info = {:host => 'localhost', :username => 'root', :password => node[:mysql][:server_root_password]}
-
-  # Create database
-  mysql_database node[:altcointip][:mysql_db_name] do
-    connection mysql_connection_info
-    action :create
-  end
-
-  # Create tables
-  mysql_database node[:altcointip][:mysql_db_name] do
-    connection mysql_connection_info
-    sql { ::File.open("#{$altcointip_dir}/altcointip/altcointip.sql").read }
-    action :query
-  end
-
-  # Create user
-  mysql_database_user node[:altcointip][:mysql_username] do
-    connection mysql_connection_info
-    password node[:altcointip][:mysql_password]
-    action :create
-  end
-
-  # Grant privileges to user
-  mysql_database_user node[:altcointip][:mysql_username] do
-    connection mysql_connection_info
-    password node[:altcointip][:mysql_password]
-    database_name node[:altcointip][:mysql_db_name]
-    host '%'
-    privileges [:all]
-    action :grant
-  end
-
   # Set up config.yml if it doesn't exist
   script "set_up_config" do
     action :run
@@ -169,11 +128,16 @@ unless File.directory?($altcointip_dir)
     user node[:altcointip][:user]
     code <<-EOH
     cp #{$altcointip_dir}/altcointip/src/sample-config.yml #{$altcointip_dir}/altcointip/src/config.yml
-    sed -i 's/mysqldb/#{node[:altcointip][:mysql_db_name]}/g' #{$altcointip_dir}/altcointip/src/config.yml || exit 1
-    sed -i 's/mysqluser/#{node[:altcointip][:mysql_username]}/g' #{$altcointip_dir}/altcointip/src/config.yml || exit 1
-    sed -i 's/mysqlpass/#{node[:altcointip][:mysql_password]}/g' #{$altcointip_dir}/altcointip/src/config.yml || exit 1
-    sed -i 's/mybotuser/#{node[:altcointip][:reddit_username]}/g' #{$altcointip_dir}/altcointip/src/config.yml || exit 1
-    sed -i 's/mybotpass/#{node[:altcointip][:reddit_password]}/g' #{$altcointip_dir}/altcointip/src/config.yml || exit 1
+    sed -i 's mysqldb #{node[:altcointip][:mysql_db_name]} g' #{$altcointip_dir}/altcointip/src/config.yml
+    sed -i 's mysqluser #{node[:altcointip][:mysql_username]} g' #{$altcointip_dir}/altcointip/src/config.yml
+    sed -i 's mysqlpass #{node[:altcointip][:mysql_password]} g' #{$altcointip_dir}/altcointip/src/config.yml
+    sed -i 's mybotuser #{node[:altcointip][:reddit_username]} g' #{$altcointip_dir}/altcointip/src/config.yml
+    sed -i 's mybotpass #{node[:altcointip][:reddit_password]} g' #{$altcointip_dir}/altcointip/src/config.yml
+    sed -i 's ~/.bitcoin/bitcoin.conf #{$altcointip_dir}/coins/bitcoin/bitcoin.conf g' #{$altcointip_dir}/altcointip/src/config.yml
+    sed -i 's ~/.litecoin/litecoin.conf #{$altcointip_dir}/coins/litecoin/litecoin.conf g' #{$altcointip_dir}/altcointip/src/config.yml
+    sed -i 's ~/.namecoin/bitcoin.conf #{$altcointip_dir}/coins/namecoin/namecoin.conf g' #{$altcointip_dir}/altcointip/src/config.yml
+    sed -i 's ~/.ppcoin/ppcoin.conf #{$altcointip_dir}/coins/ppcoin/ppcoin.conf g' #{$altcointip_dir}/altcointip/src/config.yml
+    sed -i 's ~/.primecoin/primecoin.conf #{$altcointip_dir}/coins/primecoin/primecoin.conf g' #{$altcointip_dir}/altcointip/src/config.yml
     EOH
   end
 

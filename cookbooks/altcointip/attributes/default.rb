@@ -7,8 +7,8 @@ default[:altcointip][:python_pips] = ['praw', 'sqlalchemy', 'mysql-python', 'pyy
 
 default[:altcointip][:git_repos] = {
   'altcointip' => 'https://github.com/vindimy/altcointip.git',
-  'pifkoin' => 'https://github.com/dpifke/pifkoin.git',
-  'pyvircurex' => 'https://github.com/christopherpoole/pyvircurex.git'
+  'pifkoin' => 'https://github.com/vindimy/pifkoin.git',
+  'pyvircurex' => 'https://github.com/vindimy/pyvircurex.git'
 }
 
 
