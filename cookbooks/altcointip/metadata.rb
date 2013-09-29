@@ -3,7 +3,7 @@ maintainer       'Dmitriy Vi'
 maintainer_email 'vindimy@gmail.com'
 license          'All rights reserved'
 description      'Installs/Configures altcointip, Reddit altcoin tip bot'
-version          '0.1.2'
+version          '0.1.3'
 
 depends "apache2"
 depends "database"

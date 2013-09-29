@@ -75,6 +75,16 @@ node[:altcointip][:cryptocoins].each do |key,coin|
       action coin[:autostart] ? :start : :nothing
     end
 
+    # Relax file permissions
+
+    file "/opt/crypto_coins/#{coin[:name]}/src/#{coin[:name]}d" do
+      mode '0755'
+    end
+
+    file "#{node[:altcointip][:install_dir]}/coins/#{coin[:name]}/#{coin[:name]}.conf" do
+      mode '0644'
+    end
+
   end
 
 end
