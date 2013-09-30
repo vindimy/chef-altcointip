@@ -9,10 +9,13 @@ This repository contains the Chef cookbook and role for **[ALTcointip](https://g
 The `altcointip::default` recipe does the following:
 
 * Install Python and required libraries
-* Install MySQL server and client and set up ALTcointip user, database, and tables
 * Clone `ALTcointip`, `pifkoin`, and `pyvircurex` repositories from Github to `/opt/altcointip` and create required symlinks
 * Set up basic config at `/opt/altcointip/altcointip/src/config.yml`
-* Install and configure Bitcoin, Litecoin, or any other altcoin defined by Chef attributes
+* Install and configure Bitcoin, Litecoin, or any other altcoin as defined by Chef attributes
+
+The `altcointip::database` recipe does the following:
+
+* Install MySQL server and client and set up ALTcointip user, database, and tables
 
 The `altcointip::phpmyadmin` recipe does the following:
 
