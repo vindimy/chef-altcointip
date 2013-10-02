@@ -27,7 +27,8 @@ default[:altcointip][:cryptocoins] = {
     :file_sha256sum => 'cd746a4ab3b656e41e3f09722a7336fb978eb726bae55591314f1dad60759ecc',
     :file_extract_cmd => 'tar --strip-components=1 -zxf',
     :file_daemon_path => 'bin/64/bitcoind',
-    :rpcport => 18332
+    :rpcport => 18332,
+    :port => 18333
   },
   :litecoin => {
     :enabled => false,
@@ -41,7 +42,8 @@ default[:altcointip][:cryptocoins] = {
     :file_sha256sum => 'f7ba4ad33ba73912a3e097bad6e42452788f69c3ca0af6d57a20dfddb73df2d3',
     :file_extract_cmd => 'tar --strip-components=1 -Jxf',
     :file_daemon_path => 'bin/64/litecoind',
-    :rpcport => 19332
+    :rpcport => 19332,
+    :port => 19333
   },
   :ppcoin => {
     :enabled => false,
@@ -55,7 +57,8 @@ default[:altcointip][:cryptocoins] = {
     :file_sha256sum => '919bb1c60eeebdd173ddcd4c83264f745bbf2af29410ded062f6c6bfce44f694',
     :file_extract_cmd => 'tar --strip-components=1 -zxf',
     :file_daemon_path => 'bin/64/ppcoind',
-    :rpcport => 19902
+    :rpcport => 19902,
+    :port => 19903
   },
   :namecoin => {
     :enabled => false,
@@ -70,7 +73,8 @@ default[:altcointip][:cryptocoins] = {
     :file_sha256sum => '2ecd4a17d1c301da3dc60e60af189690a8e7abb1b83fdabbfb4c2951e25bc2ec',
     :file_extract_cmd => 'tar -zxf',
     :file_daemon_path => 'namecoind',
-    :rpcport => 18336
+    :rpcport => 18336,
+    :port => 18337
   },
   :primecoin => {
     :enabled => false,
@@ -84,7 +88,8 @@ default[:altcointip][:cryptocoins] = {
     :file_sha256sum => 'e9c2a34ddf6806924139ac5a1294f0e24f7480604773faaf79df58dc394f1594',
     :file_extract_cmd => 'tar --strip-components=1 -zxf',
     :file_daemon_path => 'bin/64/primecoind',
-    :rpcport => 18772
+    :rpcport => 18772,
+    :port => 18773
   }
 }
 
@@ -143,6 +148,7 @@ default[:altcointip][:cron] = {
     :day => '*',
     :month => '*',
     :weekday => '*',
+    :user => 'root',
     :command => "cd #{node[:altcointip][:install_dir]}/altcointip/src && python _backup_wallets.py ~/backups"
   },
   'backup_config' => {

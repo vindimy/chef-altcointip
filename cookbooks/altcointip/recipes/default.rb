@@ -64,7 +64,8 @@ node[:altcointip][:cryptocoins].each do |key,coin|
     crypto_coin coin[:name] do
       repository    coin[:git_repo]
       revision      coin[:revision]
-      port          coin[:rpcport]
+      port          coin[:port]
+      rpcport       coin[:rpcport]
       rpcpassword   node[:altcointip][:cryptocoins]["#{coin[:name]}"][:rpcpassword]
       group         node[:altcointip][:user_group]
       home          File.join(node[:altcointip][:install_dir], 'coins', coin[:name])
@@ -178,7 +179,7 @@ node[:altcointip][:cron].each do |key, job|
     day job[:day]
     month job[:month]
     weekday job[:weekday]
-    user node[:altcointip][:user]
+    user job[:user] || node[:altcointip][:user]
     command job[:command]
   end
 
