@@ -31,7 +31,7 @@ unless File.directory?($altcointip_dir) and File.file?(File.join($altcointip_dir
 
   # Clone Git repository
 
-  unless File.file?(File.join($altcointip_dir, 'altcointip/altcointip.sql'))
+  unless File.directory?(File.join($altcointip_dir, 'altcointip'))
     script "git_clone" do
       action :run
       interpreter "bash"
