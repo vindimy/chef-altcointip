@@ -90,9 +90,23 @@ default[:altcointip][:cryptocoins] = {
     :file_daemon_path => 'bin/64/primecoind',
     :rpcport => 18772,
     :port => 18773
+  },
+ :feathercoin => {
+    :enabled => false,
+    :name => 'feathercoin',
+    :autostart => false,
+    :method => 'git',
+    :git_repo => 'https://github.com/FeatherCoin/FeatherCoin.git',
+    :revision => 'v0.6.4.4',
+    :file_name => 'feathercoin-0.6.4.4-linux.tar.gz',
+    :file_source_url => '',
+    :file_sha256sum => '',
+    :file_extract_cmd => 'tar --strip-components=1 -zxf',
+    :file_daemon_path => 'bin/64/feathercoind',
+    :rpcport => 19336,
+    :port => 19337
   }
 }
-
 
 
 # Linux information
