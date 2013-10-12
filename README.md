@@ -1,32 +1,113 @@
-# ALTcointip Chef cookbook and role
+altcointip Cookbook
+===================
+This cookbook installs and configures Reddit ALTcointip bot and its dependencies - such as MySQL (with optional phpMyAdmin), and cryptocoins (Bitcoin, Litecoin, etc).
 
-## Introduction
+Requirements
+------------
 
-This repository contains the Chef cookbook and role for **[ALTcointip](https://github.com/vindimy/altcointip)**, the Reddit altcoin tip bot. The Chef role `altcointip` leverages Chef cookbook `altcointip` to set up a functional ALTcointip installation, including basic configuration, database, and cryptocoins.
+#### Cookbooks
 
-## Cookbook
+  * apache2 (https://github.com/opscode-cookbooks/apache2)
+  * crypto-coin (https://github.com/andruby/chef-crypto-coin)
+  * database (https://github.com/opscode-cookbooks/database)
+  * git (https://github.com/opscode-cookbooks/git)
+  * mysql (https://github.com/opscode-cookbooks/mysql)
+  * php (https://github.com/opscode-cookbooks/php)
+  * phpmyadmin (https://github.com/priestjim/chef-phpmyadmin)
+  * python (https://github.com/opscode-cookbooks/python)
 
-The `altcointip::default` recipe does the following:
+Attributes
+----------
 
-* Install Python and required libraries
-* Clone `ALTcointip`, `pifkoin`, and `pyvircurex` repositories from Github to `/opt/altcointip` and create required symlinks
-* Set up basic config at `/opt/altcointip/altcointip/src/config.yml`
-* Install and configure Bitcoin, Litecoin, or any other altcoin as defined by Chef attributes
+#### altcointip::default
 
-The `altcointip::database` recipe does the following:
+<table>
+  <tr>
+    <th>Key</th>
+    <th>Type</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr>
+    <td><tt>user</tt></td>
+    <td>String</td>
+    <td>Linux user with ownership of ALTcointip directory. This user should run ALTcointip process.</td>
+    <td><tt>root</tt></td>
+  </tr>
+  <tr>
+    <td><tt>user_password</tt></td>
+    <td>String</td>
+    <td>Password for Linux user. Generate the value with `openssl passwd -1 'mypassword'`.</td>
+    <td><tt>root</tt></td>
+  </tr>
+  <tr>
+    <td><tt>user_group</tt></td>
+    <td>String</td>
+    <td>Linux group with ownership of ALTcointip directory</td>
+    <td><tt>root</tt></td>
+  </tr>
+  <tr>
+    <td><tt>install_dir</tt></td>
+    <td>String</td>
+    <td>Target directory to install ALTcointip into</td>
+    <td><tt>/opt</tt></td>
+  </tr>
+  <tr>
+    <td><tt>mysql_db_name</tt></td>
+    <td>String</td>
+    <td>Name of the MySQL database to be created for ALTcointip</td>
+    <td><tt>altcointip</tt></td>
+  </tr>
+  <tr>
+    <td><tt>mysql_username</tt></td>
+    <td>String</td>
+    <td>Name of the MySQL user to be created for ALTcointip</td>
+    <td><tt>altcointip</tt></td>
+  </tr>
+  <tr>
+    <td><tt>mysql_password</tt></td>
+    <td>String</td>
+    <td>MySQL user's password to be created for ALTcointip</td>
+    <td><tt>altcointip123</tt></td>
+  </tr>
+  <tr>
+    <td><tt>reddit_username</tt></td>
+    <td>String</td>
+    <td>Reddit username to be used for Reddit access</td>
+    <td><tt>myaltcointip</tt></td>
+  </tr>
+  <tr>
+    <td><tt>reddit_password</tt></td>
+    <td>String</td>
+    <td>Reddit password to be used for Reddit access</td>
+    <td><tt>myaltcointip123</tt></td>
+  </tr>
+  <tr>
+    <td><tt>www_root_dir</tt></td>
+    <td>String</td>
+    <td>Root directory to point Apache httpd to. Symlink to phpMyAdmin will be created in it.</td>
+    <td><tt>/var/www/altcointip</tt></td>
+  </tr>
+</table>
 
-* Install MySQL server and client and set up ALTcointip user, database, and tables
+Usage
+-----
 
-The `altcointip::phpmyadmin` recipe does the following:
+Just include the provided role - `role[altcointip]` - in your node's `run_list`. The role specifies some of the attributes you should manage and calls the `altcointip` cookbook.
 
-* Install Apache httpd, php, and phpMyAdmin (available at `http://<host>/pma`)
+```json
+{
+  "name":"my_node",
+  "run_list": [
+    "role[altcointip]"
+  ]
+}
+```
 
-The `altcointip` cookbook does *not*:
+To reinstall ALTcointip bot or restart a failed installation, delete the `#{node[:altcointip][:install_dir]}/altcointip` directory and run `chef-client` (don't forget to save a copy of `config.yml` if you need to preserve it).
 
-* Manage the `config.yml` file, beyond initial install
+License and Authors
+-------------------
+Authors:
 
-For a list of configurable attributes the cookbook provides, see its [README](cookbooks/altcointip/README.md).
-
-## Role
-
-The `altcointip` role sets some necessary attributes, such as MySQL bind address and phpMyAdmin version number, then includes the `altcointip::default` and `altcointip::phpmyadmin` recipes that do all the work. The role should be modified by *you* to set `altcointip` cookbook's attributes as necessary. The role should be assigned to host's runlist.
+* vindimy (https://github.com/vindimy)
