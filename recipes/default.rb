@@ -131,7 +131,7 @@ unless File.directory?("#{$altcointip_dir}/altcointip")
     EOH
   end
 
-  link "#{$altcointip_dir}/altcointip/src/pifkoin" do
+  link "#{$altcointip_dir}/altcointip/src/ctb/pifkoin" do
     to "#{$altcointip_dir}/pifkoin/python"
     owner node[:altcointip][:user]
   end
