@@ -93,18 +93,81 @@ Attributes
 Usage
 -----
 
-Just include the provided role - `role[altcointip]` - in your node's `run_list`. The role specifies some of the attributes you should manage and calls the `altcointip` cookbook.
+Create a role similar to the one below and include it - `role[altcointip]` - in your node's `run_list`. The role specifies some of the attributes you should manage, then calls the `altcointip` cookbook.
 
-```json
-{
-  "name":"my_node",
-  "run_list": [
-    "role[altcointip]"
-  ]
-}
+```ruby
+ame 'altcointip'
+description 'Role to set up altcointip, Reddit altcoin tip bot'
+
+default_attributes(
+  # Use this section to control MySQL installation
+  # Attributes are defined in mysql cookbook
+  :mysql => {
+    :bind_address => '127.0.0.1',
+    :tunable => {
+      :wait_timeout => 3600
+    }
+  },
+  # Use this section to control phpMyAdmin installation
+  # Attributes are defined in phpmyadmin cookbook
+  :phpmyadmin => {
+    :fpm => false,
+    :version => '4.0.7',
+    :checksum => ''
+  },
+  :altcointip => {
+    # Use this section to control cryptocoin installation
+    # as well as add cryptocoins not defined in the cookbook
+    # Attributes are defined in altcointip cookbook
+    :cryptocoins => {
+      :bitcoin => {
+        :enabled => false
+      },
+      :litecoin => {
+        :enabled => false
+      },
+      :namecoin => {
+        :enabled => false
+      },
+      :ppcoin => {
+        :enabled => false
+      },
+      :primecoin => {
+        :enabled => false
+      },
+      :feathercoin => {
+        :enabled => false
+      }
+    },
+    # Use this section to control cron jobs
+    # Attributes are defined in altcointip cookbook
+    :cron => {
+      :stats => {
+        :enabled => false
+      },
+      :backup_config => {
+        :enabled => true
+      },
+      :backup_db => {
+        :enabled => true
+      },
+      :backup_wallets => {
+        :enabled => true
+      }
+    }
+  }
+)
+
+run_list(
+  # Run list specifies what Chef should install
+  # You can exclude database and phpmyadmin recipes if you're installing these elsewhere
+  'recipe[altcointip::default]',
+  'recipe[altcointip::database]',
+  'recipe[altcointip::phpmyadmin]'
+)
 ```
 
-To reinstall ALTcointip bot or restart a failed installation, delete the `#{node[:altcointip][:install_dir]}/altcointip` directory and run `chef-client` (don't forget to save a copy of `config.yml` if you need to preserve it).
+To reinstall ALTcointip bot or restart a failed installation, delete the `#{node[:altcointip][:install_dir]}/altcointip` (default is `/opt/altcointip/altcointip`) directory and run `chef-client` (don't forget to save a copy of `config.yml` if you need to preserve it).
 
 License and Authors
 -------------------
