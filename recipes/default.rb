@@ -17,7 +17,6 @@ node[:altcointip][:python_pips].each do |pip|
   end
 end
 
-
 # Create altcointip Linux user and group
 
 group node[:altcointip][:user_group] do
@@ -34,73 +33,6 @@ user node[:altcointip][:user] do
   password node[:altcointip][:user_password]
   supports :manage_home => false
 end
-
-
-# Install cryptocoins
-
-directory File.join(node[:altcointip][:install_dir], 'coins') do
-  action :create
-  mode '0755'
-  user node[:altcointip][:user]
-  group node[:altcointip][:group]
-  recursive true
-end
-
-::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
-include_recipe "crypto-coin::default"
-
-node[:altcointip][:cryptocoins].each do |key,coin|
-
-  if coin[:enabled]
-
-    node.set_unless[:altcointip][:cryptocoins]["#{coin[:name]}"][:rpcpassword] = secure_password
-
-    if coin[:extra_packages]
-      coin[:extra_packages].each do |pkg|
-        package pkg
-      end
-    end
-
-    crypto_coin coin[:name] do
-      repository    coin[:git_repo]
-      revision      coin[:revision]
-      port          coin[:port]
-      rpcport       coin[:rpcport]
-      rpcpassword   node[:altcointip][:cryptocoins]["#{coin[:name]}"][:rpcpassword]
-      group         node[:altcointip][:user_group]
-      home          File.join(node[:altcointip][:install_dir], 'coins', coin[:name])
-    end
-
-    service coin[:name] do
-      provider Chef::Provider::Service::Upstart
-      action coin[:autostart] ? :start : :nothing
-    end
-
-    # Relax file permissions
-
-    file "/opt/crypto_coins/#{coin[:name]}/src/#{coin[:name]}d" do
-      mode '0755'
-    end
-
-    file "#{node[:altcointip][:install_dir]}/coins/#{coin[:name]}/#{coin[:name]}.conf" do
-      mode '0644'
-    end
-
-  end
-
-end
-
-template '/etc/profile.d/coin_alias.sh' do
-  source 'coin_alias.sh.erb'
-  backup false
-  user 'root'
-  group 'root'
-  mode '0755'
-  variables({
-    :coins => node[:altcointip][:cryptocoins]
-  })
-end
-
 
 # Set up altcointip
 
@@ -127,17 +59,11 @@ unless File.directory?("#{$altcointip_dir}/altcointip")
     code <<-EOH
     git clone #{node[:altcointip][:git_repos][:altcointip]} #{$altcointip_dir}/altcointip || exit 1
     git clone #{node[:altcointip][:git_repos][:pifkoin]} #{$altcointip_dir}/pifkoin || exit 1
-    git clone #{node[:altcointip][:git_repos][:pyvircurex]} #{$altcointip_dir}/pyvircurex || exit 1
     EOH
   end
 
   link "#{$altcointip_dir}/altcointip/src/ctb/pifkoin" do
     to "#{$altcointip_dir}/pifkoin/python"
-    owner node[:altcointip][:user]
-  end
-
-  link "#{$altcointip_dir}/altcointip/src/ctb/pyvircurex" do
-    to "#{$altcointip_dir}/pyvircurex/vircurex"
     owner node[:altcointip][:user]
   end
 
@@ -165,7 +91,6 @@ unless File.directory?("#{$altcointip_dir}/altcointip")
   end
 
 end
-
 
 # Manage crontab entries
 
