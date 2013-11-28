@@ -34,12 +34,13 @@ node[:altcointip][:cryptocoins].each do |key,coin|
 
     crypto_coin coin[:name] do
       repository       coin[:git_repo]
-      revision         coin[:revision]
+      revision         coin[:git_revision]
       port             coin[:port]
       rpcport          coin[:rpcport]
       rpcpassword      node[:altcointip][:cryptocoins]["#{coin[:name]}"][:rpcpassword]
       group            coin[:group] || node[:altcointip][:user_group]
       home             File.join(node[:altcointip][:install_dir], 'coins', coin[:name])
+      autostart        coin[:autostart]
       respawn_times    '1'
       respawn_seconds  '60'
     end
