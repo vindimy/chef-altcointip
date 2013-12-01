@@ -96,7 +96,7 @@ Usage
 Create a role similar to the one below and include it - `role[altcointip]` - in your node's `run_list`. The role specifies some of the attributes you should manage, then calls the `altcointip` cookbook.
 
 ```ruby
-ame 'altcointip'
+name 'altcointip'
 description 'Role to set up altcointip, Reddit altcoin tip bot'
 
 default_attributes(
@@ -137,6 +137,9 @@ default_attributes(
       },
       :feathercoin => {
         :enabled => false
+      },
+      :megacoin => {
+        :enabled => false
       }
     },
     # Use this section to control cron jobs
@@ -160,8 +163,9 @@ default_attributes(
 
 run_list(
   # Run list specifies what Chef should install
-  # You can exclude database and phpmyadmin recipes if you're installing these elsewhere
+  # You can exclude coins, database, and phpmyadmin recipes if you're installing these elsewhere
   'recipe[altcointip::default]',
+  'recipe[altcointip::coins]',
   'recipe[altcointip::database]',
   'recipe[altcointip::phpmyadmin]'
 )
