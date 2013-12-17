@@ -26,6 +26,13 @@ node[:altcointip][:cryptocoins].each do |key,coin|
 
     node.set_unless[:altcointip][:cryptocoins]["#{coin[:name]}"][:rpcpassword] = secure_password
 
+    home_dir = File.join(node[:altcointip][:install_dir], 'coins', coin[:name])
+    directory home_dir do
+      action :create
+      recursive true
+      group coin[:group] || node[:altcointip][:user_group]
+    end
+
     if coin[:extra_packages]
       coin[:extra_packages].each do |pkg|
         package pkg
@@ -39,7 +46,7 @@ node[:altcointip][:cryptocoins].each do |key,coin|
       rpcport          coin[:rpcport]
       rpcpassword      node[:altcointip][:cryptocoins]["#{coin[:name]}"][:rpcpassword]
       group            coin[:group] || node[:altcointip][:user_group]
-      home             File.join(node[:altcointip][:install_dir], 'coins', coin[:name])
+      home             home_dir
       executable       coin[:executable]
       autostart        coin[:autostart]
       respawn_times    '1'
