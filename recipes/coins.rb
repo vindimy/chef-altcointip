@@ -45,6 +45,7 @@ node[:altcointip][:cryptocoins].each do |key,coin|
       port             coin[:port]
       rpcport          coin[:rpcport]
       rpcpassword      node[:altcointip][:cryptocoins]["#{coin[:name]}"][:rpcpassword]
+      extra_config     coin[:extra_config] || {}
       group            coin[:group] || node[:altcointip][:user_group]
       home             home_dir
       executable       coin[:executable]
