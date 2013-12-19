@@ -71,22 +71,24 @@ unless File.directory?("#{$altcointip_dir}/altcointip")
   script "set_up_config" do
     action :run
     interpreter "bash"
-    not_if File.file?("#{$altcointip_dir}/altcointip/src/config.yml")
+    not_if File.file?("#{$altcointip_dir}/altcointip/src/conf/reddit.yml")
     cwd $altcointip_dir
     user node[:altcointip][:user]
     code <<-EOH
-    cp #{$altcointip_dir}/altcointip/src/sample-config.yml #{$altcointip_dir}/altcointip/src/config.yml
-    chmod 640 #{$altcointip_dir}/altcointip/src/config.yml
-    sed -i 's mysqldb #{node[:altcointip][:mysql_db_name]} g' #{$altcointip_dir}/altcointip/src/config.yml
-    sed -i 's mysqluser #{node[:altcointip][:mysql_username]} g' #{$altcointip_dir}/altcointip/src/config.yml
-    sed -i 's mysqlpass #{node[:altcointip][:mysql_password]} g' #{$altcointip_dir}/altcointip/src/config.yml
-    sed -i 's mybotuser #{node[:altcointip][:reddit_username]} g' #{$altcointip_dir}/altcointip/src/config.yml
-    sed -i 's mybotpass #{node[:altcointip][:reddit_password]} g' #{$altcointip_dir}/altcointip/src/config.yml
-    sed -i 's ~/.bitcoin/bitcoin.conf #{$altcointip_dir}/coins/bitcoin/bitcoin.conf g' #{$altcointip_dir}/altcointip/src/config.yml
-    sed -i 's ~/.litecoin/litecoin.conf #{$altcointip_dir}/coins/litecoin/litecoin.conf g' #{$altcointip_dir}/altcointip/src/config.yml
-    sed -i 's ~/.namecoin/bitcoin.conf #{$altcointip_dir}/coins/namecoin/namecoin.conf g' #{$altcointip_dir}/altcointip/src/config.yml
-    sed -i 's ~/.ppcoin/ppcoin.conf #{$altcointip_dir}/coins/ppcoin/ppcoin.conf g' #{$altcointip_dir}/altcointip/src/config.yml
-    sed -i 's ~/.primecoin/primecoin.conf #{$altcointip_dir}/coins/primecoin/primecoin.conf g' #{$altcointip_dir}/altcointip/src/config.yml
+    cp -r #{$altcointip_dir}/altcointip/src/conf-sample #{$altcointip_dir}/altcointip/src/conf
+    chmod 640 #{$altcointip_dir}/altcointip/src/conf/*
+    sed -i 's mysqldb #{node[:altcointip][:mysql_db_name]} g' #{$altcointip_dir}/altcointip/src/conf/db.yml
+    sed -i 's mysqluser #{node[:altcointip][:mysql_username]} g' #{$altcointip_dir}/altcointip/src/conf/db.yml
+    sed -i 's mysqlpass #{node[:altcointip][:mysql_password]} g' #{$altcointip_dir}/altcointip/src/conf/db.yml
+    sed -i 's mybotuser #{node[:altcointip][:reddit_username]} g' #{$altcointip_dir}/altcointip/src/conf/regex.yml
+    sed -i 's mybotuser #{node[:altcointip][:reddit_username]} g' #{$altcointip_dir}/altcointip/src/conf/reddit.yml
+    sed -i 's mybotpass #{node[:altcointip][:reddit_password]} g' #{$altcointip_dir}/altcointip/src/conf/reddit.yml
+    sed -i 's ~/.bitcoin/bitcoin.conf #{$altcointip_dir}/coins/bitcoin/bitcoin.conf g' #{$altcointip_dir}/altcointip/src/conf/coins.yml
+    sed -i 's ~/.litecoin/litecoin.conf #{$altcointip_dir}/coins/litecoin/litecoin.conf g' #{$altcointip_dir}/altcointip/src/conf/coins.yml
+    sed -i 's ~/.namecoin/bitcoin.conf #{$altcointip_dir}/coins/namecoin/namecoin.conf g' #{$altcointip_dir}/altcointip/src/conf/coins.yml
+    sed -i 's ~/.ppcoin/ppcoin.conf #{$altcointip_dir}/coins/ppcoin/ppcoin.conf g' #{$altcointip_dir}/altcointip/src/conf/coins.yml
+    sed -i 's ~/.primecoin/primecoin.conf #{$altcointip_dir}/coins/primecoin/primecoin.conf g' #{$altcointip_dir}/altcointip/src/conf/coins.yml
+    sed -i 's ~/.megacoin/megacoin.conf #{$altcointip_dir}/coins/megacoin/megacoin.conf g' #{$altcointip_dir}/altcointip/src/conf/coins.yml
     EOH
   end
 
