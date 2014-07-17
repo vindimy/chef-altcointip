@@ -66,6 +66,22 @@ default[:altcointip][:cryptocoins] = {
     :rpcport => 18336,
     :port => 18337
   },
+  :devcoin => {
+    :enabled => false,
+    :name => 'devcoin',
+    :executable => 'devcoind',
+    :autostart => false,
+    :method => 'git',
+    :git_repo => 'https://git.gitorious.org/devcoin/devcoin.git',
+    :git_revision => 'master',
+    :file_name => '',
+    :file_source_url => '',
+    :file_sha256sum => '',
+    :file_extract_cmd => 'tar --strip-components=1 -zxf',
+    :file_daemon_path => 'bin/64/devcoind',
+    :rpcport => 53333,
+    :port => 63333
+  },
   :primecoin => {
     :enabled => false,
     :name => 'primecoin',
