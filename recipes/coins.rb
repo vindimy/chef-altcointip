@@ -42,6 +42,7 @@ node[:altcointip][:cryptocoins].each do |key,coin|
     crypto_coin coin[:name] do
       repository       coin[:git_repo]
       revision         coin[:git_revision]
+      compile_cmd      coin[:compile_cmd] || nil
       port             coin[:port]
       rpcport          coin[:rpcport]
       rpcpassword      node[:altcointip][:cryptocoins]["#{coin[:name]}"][:rpcpassword]
